@@ -1,0 +1,660 @@
+<style>
+  @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap");
+  .cc-beard-popup,
+  .cc-beard-popup * {
+    box-sizing: border-box;
+  }
+  .cc-beard-popup {
+    position: fixed;
+    z-index: 2147483000;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    overflow-y: auto;
+    background: rgba(0, 0, 0, 0.75);
+    color: #111;
+    font-family: Poppins, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .cc-beard-popup__panel {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: min(740px, 100%);
+    height: auto;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.75);
+    border-radius: 10px;
+    background: #fff;
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.4);
+  }
+  .cc-beard-popup__close {
+    position: absolute;
+    z-index: 2;
+    top: 9px;
+    right: 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.9);
+    cursor: pointer;
+  }
+  .cc-beard-popup__close img {
+    display: block;
+    width: 18px;
+    height: 18px;
+    object-fit: contain;
+  }
+  .cc-beard-popup__close:focus-visible,
+  .cc-beard-popup__button:focus-visible,
+  .cc-beard-popup__copy-link:focus-visible,
+  .cc-beard-popup__coupon:focus-visible,
+  .cc-beard-popup input:focus-visible {
+    outline: 2px solid #1e9bd5;
+    outline-offset: 2px;
+  }
+  .cc-beard-popup__top {
+    display: flex;
+    min-height: 280px;
+    flex: 1 1 auto;
+  }
+  .cc-beard-popup__visual {
+    width: 52%;
+    min-width: 0;
+    background: #eee;
+  }
+  .cc-beard-popup__visual img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+  .cc-beard-popup__content {
+    display: flex;
+    width: 48%;
+    min-width: 0;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 15px;
+    text-align: center;
+  }
+  .cc-beard-popup__state {
+    width: 100%;
+  }
+  .cc-beard-popup [hidden] {
+    display: none !important;
+  }
+  .cc-beard-popup__signup-title {
+    margin: 0 0 12px;
+    color: #111;
+    font-size: clamp(24px, 3vw, 32px);
+    font-weight: 600;
+    line-height: 1.12;
+  }
+  .cc-beard-popup__signup-title span {
+    display: block;
+  }
+  .cc-beard-popup__signup-title .cc-beard-popup__support {
+    color: #111;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 1.3;
+  }
+  .cc-beard-popup__signup-title .cc-beard-popup__offer {
+    color: #f58220;
+    white-space: nowrap;
+  }
+  .cc-beard-popup__signup-form {
+    width: 100%;
+  }
+  .cc-beard-popup__field {
+    position: relative;
+    width: 100%;
+    margin-top: 8px;
+  }
+  .cc-beard-popup__field:first-child {
+    margin-top: 0;
+  }
+  .cc-beard-popup__field > img {
+    position: absolute;
+    top: 50%;
+    left: 12px;
+    width: 17px;
+    height: 17px;
+    transform: translateY(-50%);
+    object-fit: contain;
+    pointer-events: none;
+  }
+  .cc-beard-popup__field input {
+    display: block;
+    width: 100%;
+    height: 38px;
+    padding: 4px 10px 4px 38px;
+    border: 1px solid transparent;
+    border-radius: 7px;
+    outline: 0;
+    background: #f1f1f1;
+    color: #111;
+    font:
+      400 16px/1.2 Poppins,
+      sans-serif;
+  }
+  .cc-beard-popup__field input::placeholder {
+    color: #737373;
+    opacity: 1;
+  }
+  .cc-beard-popup__field input[aria-invalid="true"] {
+    border-color: #d93025;
+  }
+  .cc-beard-popup__error {
+    display: none;
+    margin: 3px 2px 0;
+    color: #d93025;
+    font-size: 11px;
+    line-height: 1.25;
+    text-align: left;
+  }
+  .cc-beard-popup__button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 40px;
+    margin-top: 10px;
+    padding: 0 12px;
+    border: 0;
+    border-radius: 7px;
+    background: #1e9bd5;
+    color: #fff;
+    cursor: pointer;
+    font:
+      700 18px/1 Poppins,
+      sans-serif;
+    text-align: center;
+  }
+  .cc-beard-popup__button:hover {
+    background: #168bc0;
+  }
+  .cc-beard-popup__button:disabled {
+    cursor: wait;
+    opacity: 0.65;
+  }
+  .cc-beard-popup__success {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+  }
+  .cc-beard-popup__success-title {
+    margin: 0 0 5px;
+    color: #111;
+    font-size: 22px;
+    font-weight: 600;
+    letter-spacing: -1px;
+    line-height: 1;
+    flex: 0 0 auto;
+    min-width: 0;
+    width: 100%;
+  }
+  .cc-beard-popup__success-title span,
+  .cc-beard-popup__success-subtitle > span {
+    display: block;
+    white-space: nowrap;
+  }
+  .cc-beard-popup__success-subtitle {
+    margin: 0 0 6px;
+    color: #111;
+    font-size: 16px;
+    font-weight: 400;
+    letter-spacing: -0.5px;
+    line-height: 1;
+    flex: 0 0 auto;
+    min-width: 0;
+    width: 100%;
+  }
+  .cc-beard-popup__success-subtitle .cc-beard-popup__orange {
+    color: #f58220;
+    font-weight: 600;
+  }
+  .cc-beard-popup__success-subtitle .cc-beard-popup__blue {
+    color: #1e9bd5;
+    font-weight: 600;
+  }
+  .cc-beard-popup__coupon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 200px;
+    height: 50px;
+    padding: 10px;
+    border: 0;
+    background: #000;
+    color: #fff;
+    cursor: pointer;
+    font:
+      700 20px/1 Poppins,
+      sans-serif;
+    flex: 0 0 50px;
+    letter-spacing: 4px;
+    text-align: center;
+  }
+  .cc-beard-popup__coupon span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    border: 1px dashed #fff;
+  }
+  .cc-beard-popup__copy-link {
+    display: block;
+    margin: 4px 0 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: #111;
+    cursor: pointer;
+    font:
+      400 12px/1.3 Poppins,
+      sans-serif;
+    flex: 0 0 auto;
+    text-decoration: underline;
+  }
+  .cc-beard-popup__success .cc-beard-popup__button {
+    flex: 0 0 40px;
+    margin-top: 8px;
+  }
+  .cc-beard-popup__benefits {
+    min-height: 0;
+    flex: 0 0 143px;
+    padding: 8px 8px 5px;
+    background: #000;
+    color: #fff;
+    text-align: center;
+  }
+  .cc-beard-popup__benefits-heading {
+    margin: 0 0 5px;
+    color: #23afd4;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 6px;
+    line-height: 1.2;
+    text-indent: 6px;
+  }
+  .cc-beard-popup__benefit-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 5px;
+  }
+  .cc-beard-popup__benefit {
+    min-width: 0;
+    text-align: center;
+  }
+  .cc-beard-popup__benefit img {
+    display: block;
+    width: 30px;
+    height: 30px;
+    margin: 0 auto 2px;
+    object-fit: contain;
+  }
+  .cc-beard-popup__benefit-title {
+    margin: 0 0 1px;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: -0.25px;
+    line-height: 1.2;
+    white-space: nowrap;
+  }
+  .cc-beard-popup__benefit-description {
+    margin: 0;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 1.2;
+  }
+  @media (max-width: 700px) {
+    .cc-beard-popup {
+      align-items: flex-start;
+      padding: 10px;
+    }
+    .cc-beard-popup__panel {
+      width: min(420px, 100%);
+      height: auto;
+      min-height: 0;
+      margin: auto;
+    }
+    .cc-beard-popup__top {
+      display: block;
+      min-height: 0;
+    }
+    .cc-beard-popup__visual,
+    .cc-beard-popup__content {
+      width: 100%;
+    }
+    .cc-beard-popup__visual {
+      height: 180px;
+    }
+    .cc-beard-popup__content {
+      min-height: 295px;
+      padding: 14px 20px;
+    }
+    .cc-beard-popup__signup-title {
+      font-size: clamp(24px, 8vw, 30px);
+    }
+    .cc-beard-popup__benefits {
+      flex-basis: auto;
+      padding: 15px 10px 17px;
+    }
+    .cc-beard-popup__benefit-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      row-gap: 16px;
+    }
+    .cc-beard-popup__benefit-description {
+      font-size: 13px;
+    }
+  }
+  @media (max-width: 360px) {
+    .cc-beard-popup__visual {
+      height: 145px;
+    }
+    .cc-beard-popup__content {
+      min-height: 285px;
+      padding: 12px 14px;
+    }
+    .cc-beard-popup__success-title {
+      font-size: 20px;
+    }
+    .cc-beard-popup__success-subtitle {
+      font-size: 14px;
+    }
+  }
+</style>
+<cc-snippet prepend-to="body">
+  <div id="rand-id-cc-beard-popup" class="cc-beard-popup" role="dialog" aria-modal="true" aria-label="Quartz Banger signup offer">
+    <div class="cc-beard-popup__panel">
+      <button class="cc-beard-popup__close" type="button" data-cc-close="" aria-label="Close popup">
+        <img src="https://cdn.convertcart.com/uploads/1b38dc35.png" alt="">
+      </button>
+      <div class="cc-beard-popup__top">
+        <div class="cc-beard-popup__visual">
+          <img src="https://cdn.convertcart.com/uploads/d1d3bb50.png" alt="Quartz Banger beard care promotion">
+        </div>
+        <div class="cc-beard-popup__content">
+          <div class="cc-beard-popup__state cc-beard-popup__signup" data-cc-signup-state="">
+            <p class="cc-beard-popup__signup-title">
+              <span>Sign up and get a</span>
+              <span class="cc-beard-popup__offer">FREE $15 PRODUCT</span>
+              <span class="cc-beard-popup__support">with your first purchase!</span>
+            </p>
+            <form class="cc-beard-popup__signup-form" data-cc-state="submitted" novalidate="">
+              <div class="cc-beard-popup__field">
+                <img src="https://cdn.convertcart.com/uploads/c72d1b70.png" alt="">
+                <input type="text" name="name" placeholder="Enter your name" autocomplete="name" aria-label="Enter your name">
+                <span class="cc-beard-popup__error" data-error-for="name" role="alert"></span>
+              </div>
+              <div class="cc-beard-popup__field">
+                <img src="https://cdn.convertcart.com/uploads/64129973.png" alt="">
+                <input type="email" name="emailId" placeholder="Enter your email" autocomplete="email" aria-label="Enter your email">
+                <span class="cc-beard-popup__error" data-error-for="email" role="alert"></span>
+              </div>
+              <button class="cc-beard-popup__button" type="submit">SUBMIT</button>
+            </form>
+          </div>
+          <div class="cc-beard-popup__state cc-beard-popup__success" data-cc-success-state="" hidden="">
+            <p class="cc-beard-popup__success-title">
+              <span>Thanks for joining our</span>
+              <span>community and supporting</span>
+              <span>what we do.</span>
+            </p>
+            <p class="cc-beard-popup__success-subtitle">
+              <span>Upgrade your beard game!</span>
+              <span>Add a <span class="cc-beard-popup__orange">comb</span> to your cart and</span>
+              <span>use the coupon code at checkout to</span>
+              <span>claim it for <span class="cc-beard-popup__blue">FREE</span>.</span>
+            </p>
+            <button class="cc-beard-popup__coupon" type="button" data-cc-copy="" aria-label="Copy coupon code FREEGIFT">
+              <span>FREEGIFT</span>
+            </button>
+            <button class="cc-beard-popup__copy-link" type="button" data-cc-copy="">Click to Copy</button>
+            <button class="cc-beard-popup__button" type="button" data-cc-continue="">CONTINUE SHOPPING</button>
+          </div>
+        </div>
+      </div>
+      <section class="cc-beard-popup__benefits" aria-label="Benefits of joining">
+        <h2 class="cc-beard-popup__benefits-heading">BENEFITS OF JOINING:</h2>
+        <div class="cc-beard-popup__benefit-grid">
+          <div class="cc-beard-popup__benefit">
+            <img src="https://cdn.convertcart.com/uploads/cb37964e.png" alt="">
+            <p class="cc-beard-popup__benefit-title">Exclusive deals</p>
+            <p class="cc-beard-popup__benefit-description">Be the first to know about our latest offers and promotions.</p>
+          </div>
+          <div class="cc-beard-popup__benefit">
+            <img src="https://cdn.convertcart.com/uploads/c4b462dd.png" alt="">
+            <p class="cc-beard-popup__benefit-title">New product alerts</p>
+            <p class="cc-beard-popup__benefit-description">Get notified when we launch new products.</p>
+          </div>
+          <div class="cc-beard-popup__benefit">
+            <img src="https://cdn.convertcart.com/uploads/c53f49fb.png" alt="">
+            <p class="cc-beard-popup__benefit-title">Inspiration &amp; tips</p>
+            <p class="cc-beard-popup__benefit-description">Receive helpful advice and ideas to enhance your Beard Care.</p>
+          </div>
+          <div class="cc-beard-popup__benefit">
+            <img src="https://cdn.convertcart.com/uploads/cde97bd4.png" alt="">
+            <p class="cc-beard-popup__benefit-title">Join the Community</p>
+            <p class="cc-beard-popup__benefit-description">Reach out to us and we will be happy to help!</p>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</cc-snippet>
+<script>
+  (function () {
+    const $ = require("zepto");
+    const copyToClipboard = require("convertcart/utils/clipboard-copy-v2");
+    const root = $(".cc-beard-popup").first();
+    if (!root.length || root.attr("data-cc-mounted") === "true") {
+      return;
+    }
+    root.attr("data-cc-mounted", "true");
+    const body = document.body;
+    const html = document.documentElement;
+    const originalBodyOverflow = body.style.overflow;
+    const originalHtmlOverflow = html.style.overflow;
+    let isOpen = true;
+    let isSubmitting = false;
+    let isDestroyed = false;
+    let copiedTimer = null;
+    let currentState = "signup";
+    const code = "FREEGIFT";
+    const form = root.find(".cc-beard-popup__signup-form");
+    const signup = root.find("[data-cc-signup-state]");
+    const success = root.find("[data-cc-success-state]");
+    function lockPage() {
+      body.style.overflow = "hidden";
+      html.style.overflow = "hidden";
+    }
+    function restorePage() {
+      body.style.overflow = originalBodyOverflow;
+      html.style.overflow = originalHtmlOverflow;
+    }
+    function destroyCampaign() {
+      if (isDestroyed) {
+        return;
+      }
+      isDestroyed = true;
+      isOpen = false;
+      if (copiedTimer) {
+        clearTimeout(copiedTimer);
+        copiedTimer = null;
+      }
+      $(document).off("keydown", onKeydown);
+      document.removeEventListener("submit", onSubmitCapture, true);
+      root.off();
+      restorePage();
+      campaign.destroy();
+    }
+    function showSuccess() {
+      if (currentState === "success") {
+        return;
+      }
+      currentState = "success";
+      isSubmitting = false;
+      signup.attr("hidden", "hidden");
+      success.removeAttr("hidden");
+      form.find('button[type="submit"]').prop("disabled", false);
+    }
+    function setError(input, message) {
+      const field = input.closest(".cc-beard-popup__field");
+      const error = field.find(".cc-beard-popup__error");
+      input.attr("aria-invalid", message ? "true" : "false");
+      error.text(message || "").css("display", message ? "block" : "none");
+    }
+    function validateForm() {
+      const nameInput = form.find('input[name="name"]');
+      const emailInput = form.find('input[name="emailId"]');
+      const name = String(nameInput.val() || "").trim();
+      const email = String(emailInput.val() || "").trim();
+      let valid = true;
+      if (!name) {
+        setError(nameInput, "Please enter your name.");
+        valid = false;
+      } else {
+        setError(nameInput, "");
+      }
+      if (!email) {
+        setError(emailInput, "Please enter your email.");
+        valid = false;
+      } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        setError(emailInput, "Please enter a valid email address.");
+        valid = false;
+      } else {
+        setError(emailInput, "");
+      }
+      return valid;
+    }
+    function onSubmitCapture(event) {
+      if (event.target !== form[0]) {
+        return;
+      }
+      if (isSubmitting) {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        return;
+      }
+      if (!validateForm()) {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        return;
+      }
+      isSubmitting = true;
+      form.find('button[type="submit"]').prop("disabled", true);
+      campaign.trigger("clicked.submit");
+    }
+    function restoreCoupon() {
+      root.find(".cc-beard-popup__coupon span").text(code);
+      root.find(".cc-beard-popup__coupon").attr("aria-label", "Copy coupon code FREEGIFT");
+      root.find(".cc-beard-popup__copy-link").attr("aria-label", "Click to Copy");
+    }
+    function markCopied() {
+      if (copiedTimer) {
+        clearTimeout(copiedTimer);
+      }
+      root.find(".cc-beard-popup__coupon span").text("Copied");
+      root.find(".cc-beard-popup__coupon").attr("aria-label", "Copied");
+      root.find(".cc-beard-popup__copy-link").attr("aria-label", "Copied");
+      copiedTimer = setTimeout(function () {
+        if (!isDestroyed) {
+          restoreCoupon();
+        }
+      }, 1000);
+    }
+    function fallbackCopy(text) {
+      const textarea = document.createElement("textarea");
+      textarea.value = text;
+      textarea.setAttribute("readonly", "");
+      textarea.style.position = "fixed";
+      textarea.style.opacity = "0";
+      document.body.appendChild(textarea);
+      textarea.select();
+      let copied = false;
+      try {
+        copied = document.execCommand("copy");
+      } catch {
+        copied = false;
+      }
+      document.body.removeChild(textarea);
+      return copied;
+    }
+    function copyCode() {
+      let copied = false;
+      try {
+        const result = copyToClipboard(code);
+        if (result && typeof result.then === "function") {
+          result
+            .then(function () {
+              campaign.trigger("coupon copied");
+              markCopied();
+            })
+            .catch(function () {
+              if (fallbackCopy(code)) {
+                campaign.trigger("coupon copied");
+                markCopied();
+              }
+            });
+          return;
+        }
+        copied = true;
+      } catch {
+        copied = fallbackCopy(code);
+      }
+      if (copied) {
+        campaign.trigger("coupon copied");
+        markCopied();
+      }
+    }
+    function onKeydown(event) {
+      if (isOpen && event.key === "Escape") {
+        event.preventDefault();
+        destroyCampaign();
+      }
+    }
+    document.addEventListener("submit", onSubmitCapture, true);
+    root.on("input", 'input[name="name"], input[name="emailId"]', function () {
+      if ($(this).attr("aria-invalid") === "true") {
+        validateForm();
+      }
+    });
+    root.on("click", "[data-cc-close]", function () {
+      if (currentState === "signup") {
+        campaign.setState("cancelled");
+      } else {
+        campaign.trigger("thankclosed");
+      }
+      destroyCampaign();
+    });
+    root.on("click", "[data-cc-copy]", function (event) {
+      event.preventDefault();
+      copyCode();
+    });
+    root.on("click", "[data-cc-continue]", function () {
+      campaign.trigger("clicked.continue-shopping");
+      destroyCampaign();
+    });
+    campaign.on("submitted", showSuccess);
+    root.css("display", "flex");
+    lockPage();
+    $(document).on("keydown", onKeydown);
+  })();
+</script>
